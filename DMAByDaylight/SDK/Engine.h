@@ -1,0 +1,45 @@
+#pragma once
+#include "ActorEntity.h"
+#include "EngineStructs.h"
+
+// For these offsets just 7 dumper the game and open Engine_Classes
+class Engine
+{
+
+private:
+	uint64_t OwningActorOffset = 0xA8; // NetConnection -> OwningActor
+	uint64_t MaxPacketOffset = 0xB0; // NetConnection -> MaxPacket
+	uint64_t OwningActor;
+	uint64_t MaxPacket;
+	uint64_t OwningGameInstance = 0x1e8; // World -> OwningGameInstance
+	uint64_t PersistentLevel = 0x38; // World  -> PersistentLevel
+	uint64_t GWorld = 0xB99DB00;
+	uint64_t GNames = 0xB711600;
+	uint64_t LocalPlayers = 0x40; // GameInstance -> LocalPlayers
+	uint64_t PlayerController = 0x38; // Player -> PlayerController
+	uint64_t AcknowledgedPawn = 0x350;	
+	uint64_t CameraManager = 0x360; // PlayerController -> PlayerCameraManager
+	uint64_t CameraCachePrivate = 0x13B0; // PlayerCameraManager -> CameraCachePrivate
+	uint64_t CameraCachePrivateOffset = 0x13B0; // PlayerCameraManager -> CameraCachePrivate
+	CameraCacheEntry CameraEntry; // ScriptStruct Engine.CameraCacheEntry
+	MinimalViewInfo CameraViewInfo; // ScriptStruct Engine.MinimalViewInfo
+	std::vector<std::shared_ptr<ActorEntity>> Actors;
+	// SkillCheck Offsets
+	uint64_t InteractionHandler = 0xC00;
+	uint64_t SkillCheck = 0x330;
+	uint64_t SkillCheck_IsDisplayed = 0x178;
+	uint64_t SkillCheck_CurrentProgress = 0x17C;
+	uint64_t SkillCheck_CustomType = 0x1A8;
+	uint64_t SkillCheck_Definition = 0x1E8;
+public:
+	Engine();
+	void Cache();
+	void UpdatePlayers();
+	std::vector<std::shared_ptr<ActorEntity>> GetActors();
+	CameraCacheEntry GetCameraCache();
+	void RefreshViewMatrix(VMMDLL_SCATTER_HANDLE handle);
+	uint32_t GetActorSize();
+	SkillCheckState GetSkillCheck();
+	void AutoSkillCheck(bool enabled, int key, bool useMakcu, int comPort);
+
+};
